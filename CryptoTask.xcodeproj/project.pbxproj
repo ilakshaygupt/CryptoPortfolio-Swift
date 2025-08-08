@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5C6DB9B12E46322900985F58 /* NavKit in Frameworks */ = {isa = PBXBuildFile; productRef = 5C6DB9B02E46322900985F58 /* NavKit */; };
+		5C6DBA2F2E463CE100985F58 /* NavKit in Frameworks */ = {isa = PBXBuildFile; productRef = 5C6DBA2E2E463CE100985F58 /* NavKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5C6DB9B12E46322900985F58 /* NavKit in Frameworks */,
+				5C6DBA2F2E463CE100985F58 /* NavKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,6 +73,7 @@
 			name = CryptoTask;
 			packageProductDependencies = (
 				5C6DB9B02E46322900985F58 /* NavKit */,
+				5C6DBA2E2E463CE100985F58 /* NavKit */,
 			);
 			productName = CryptoTask;
 			productReference = 5C6DB9832E438A7800985F58 /* CryptoTask.app */;
@@ -101,7 +104,7 @@
 			mainGroup = 5C6DB97A2E438A7800985F58;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				5C6DB9AF2E46322900985F58 /* XCLocalSwiftPackageReference "../NavKit" */,
+				5C6DBA2D2E463CE100985F58 /* XCRemoteSwiftPackageReference "NavKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 5C6DB9842E438A7800985F58 /* Products */;
@@ -338,16 +341,25 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCLocalSwiftPackageReference section */
-		5C6DB9AF2E46322900985F58 /* XCLocalSwiftPackageReference "../NavKit" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../NavKit;
+/* Begin XCRemoteSwiftPackageReference section */
+		5C6DBA2D2E463CE100985F58 /* XCRemoteSwiftPackageReference "NavKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ilakshaygupt/NavKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.4;
+			};
 		};
-/* End XCLocalSwiftPackageReference section */
+/* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		5C6DB9B02E46322900985F58 /* NavKit */ = {
 			isa = XCSwiftPackageProductDependency;
+			productName = NavKit;
+		};
+		5C6DBA2E2E463CE100985F58 /* NavKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5C6DBA2D2E463CE100985F58 /* XCRemoteSwiftPackageReference "NavKit" */;
 			productName = NavKit;
 		};
 /* End XCSwiftPackageProductDependency section */

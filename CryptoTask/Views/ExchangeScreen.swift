@@ -15,7 +15,7 @@ struct ExchangeScreen: View {
     @StateObject private var viewModel = ExchangeViewModel()
     
     var body: some View {
-        NavigationView {
+        
             ZStack {
                 Color.black.ignoresSafeArea()
                 
@@ -136,8 +136,7 @@ struct ExchangeScreen: View {
                     }
                 }
             }
-            .navigationBarHidden(true)
-        }
+        
     }
 }
 

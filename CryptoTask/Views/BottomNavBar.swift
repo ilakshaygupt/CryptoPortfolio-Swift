@@ -25,7 +25,7 @@ struct BottomNavBar: View {
                 RoundedRectangle(cornerRadius: 40)
                     .fill(.ultraThinMaterial)
                     .overlay(
-                        RoundedRectangle(cornerRadius: 28)
+                        RoundedRectangle(cornerRadius: 40)
                             .stroke(Color.white.opacity(0.1), lineWidth: 0.5)
                     )
             )

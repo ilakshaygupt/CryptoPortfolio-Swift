@@ -49,8 +49,6 @@ class ExchangeViewModel: ObservableObject {
     }
     
     private func updateBalance(for transaction: ExchangeTransaction) {
-        // In a real app, this would calculate based on the transaction
-        // For now, we'll just simulate a small change
         if transaction.type == .receive {
             balance += 1000 // Simulate receiving money
             changeAmount += 50

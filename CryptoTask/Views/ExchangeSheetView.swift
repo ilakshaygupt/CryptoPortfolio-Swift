@@ -23,6 +23,7 @@ struct ExchangeSheetView: View {
                     VStack(spacing: 24) {
                         HStack {
                             Button("Cancel") {
+                                NavigationService.shared.pop()
                                 dismiss()
                             }
                             .foregroundColor(.white)
@@ -153,6 +154,8 @@ struct ExchangeSheetView: View {
             }
         }
         .navigationBarHidden(true)
+        .navigationBarTitle("", displayMode: .inline)
+
         .onChange(of: viewModel.fromAmount) { _ in
             viewModel.calculateConversion()
         }
