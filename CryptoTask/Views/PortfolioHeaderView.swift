@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct PortfolioHeaderCard: View {
+    @StateObject private var viewModel = PortfolioViewModel()
+    
     var body: some View {
         ZStack {
             LinearGradient(
@@ -64,7 +66,7 @@ struct PortfolioHeaderCard: View {
                 
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
-                        Text("Portfolio Value")
+                        Text(viewModel.getPortfolioTitle())
                             .font(.system(size: 16, weight: .regular))
                             .foregroundColor(Color.white.opacity(0.9))
                         
@@ -72,22 +74,17 @@ struct PortfolioHeaderCard: View {
                             .font(.system(size: 10, weight: .medium))
                             .foregroundColor(Color.white.opacity(0.7))
                         Spacer()
-                        ToggleButtons()
+                        ToggleButtons(viewModel: viewModel)
                     }
                     
                     HStack(alignment: .bottom, spacing: 4) {
-                        Text("₹")
+                        Text(viewModel.getCurrencySymbol())
                             .font(.system(size: 32, weight: .regular))
                             .foregroundColor(.white)
                         
-                        Text("1,57,342")
+                        Text(viewModel.getFormattedPortfolioValue())
                             .font(.system(size: 48, weight: .regular))
                             .foregroundColor(.white)
-                        
-                        Text(".05")
-                            .font(.system(size: 32, weight: .regular))
-                            .foregroundColor(.white)
-                            .padding(.bottom, 2)
                     }
                 }
                 .padding(.horizontal, 24)
@@ -114,10 +111,10 @@ struct RoundedCorner: Shape {
 }
 
 struct ToggleButtons: View {
-    @State private var selected = "cash"
+    @ObservedObject var viewModel: PortfolioViewModel
     
     var body: some View {
-        ZStack(alignment: selected == "cash" ? .leading : .trailing) {
+        ZStack(alignment: viewModel.selectedCurrency == "cash" ? .leading : .trailing) {
             
             Color.black.opacity(0.4)
                 .clipShape(Capsule())
@@ -126,19 +123,19 @@ struct ToggleButtons: View {
                 .fill(Color.black)
                 .frame(width: 60, height: 40)
                 .padding(4)
-                .animation(.easeInOut(duration: 0.25), value: selected)
+                .animation(.easeInOut(duration: 0.25), value: viewModel.selectedCurrency)
             
             HStack(spacing: 0) {
                 Button(action: {
                     withAnimation(.easeInOut(duration: 0.25)) {
-                        selected = "cash"
+                        viewModel.selectCurrency("cash")
                     }
                 }) {
                     HStack {
                         Spacer()
                         Image(systemName: "banknote")
                             .font(.system(size: 22))
-                            .foregroundColor(selected == "cash" ? .white : .gray)
+                            .foregroundColor(viewModel.selectedCurrency == "cash" ? .white : .gray)
                         Spacer()
                     }
                     .frame(width: 60, height: 40)
@@ -146,14 +143,14 @@ struct ToggleButtons: View {
                 
                 Button(action: {
                     withAnimation(.easeInOut(duration: 0.25)) {
-                        selected = "bitcoin"
+                        viewModel.selectCurrency("bitcoin")
                     }
                 }) {
                     HStack {
                         Spacer()
                         Text("₿")
                             .font(.system(size: 22, weight: .bold))
-                            .foregroundColor(selected == "bitcoin" ? .white : .gray)
+                            .foregroundColor(viewModel.selectedCurrency == "bitcoin" ? .white : .gray)
                         Spacer()
                     }
                     .frame(width: 60, height: 40)

@@ -12,29 +12,7 @@ import SwiftUI
 import NavKit
 
 struct ExchangeScreen: View {
-    @State private var transactions: [ExchangeTransaction] = [
-        ExchangeTransaction(
-            type: .receive,
-            title: "Receive",
-            date: "20 March",
-            currency: "BTC",
-            amount: "+0.002126"
-        ),
-        ExchangeTransaction(
-            type: .send,
-            title: "Sent",
-            date: "19 March",
-            currency: "ETH",
-            amount: "-0.003126"
-        ),
-        ExchangeTransaction(
-            type: .send,
-            title: "Send",
-            date: "18 March",
-            currency: "LTC",
-            amount: "-0.02126"
-        )
-    ]
+    @StateObject private var viewModel = ExchangeViewModel()
     
     var body: some View {
         NavigationView {
@@ -73,16 +51,16 @@ struct ExchangeScreen: View {
                                 .background(Color.white.opacity(0.2))
                                 .clipShape(Capsule())
                             
-                            Text("1,57,342.05")
+                            Text(viewModel.getFormattedBalance())
                                 .font(.system(size: 36, weight: .bold))
                                 .foregroundColor(.white)
                             
                             HStack(spacing: 12) {
-                                Text("₹1,342")
+                                Text("₹\(viewModel.getFormattedChangeAmount())")
                                     .foregroundColor(.white.opacity(0.7))
                                     .font(.system(size: 16))
                                 
-                                Text("+4.6%")
+                                Text(viewModel.getFormattedChangePercentage())
                                     .foregroundColor(.green)
                                     .font(.system(size: 16, weight: .medium))
                             }
@@ -109,7 +87,7 @@ struct ExchangeScreen: View {
                             Button(action: {
                                 NavigationService.shared.push(
                                     ExchangeSheetView { newExchangeTransaction in
-                                        transactions.insert(newExchangeTransaction, at: 0)
+                                        viewModel.addTransaction(newExchangeTransaction)
                                     }
                                 )
                             }) {
@@ -142,7 +120,7 @@ struct ExchangeScreen: View {
                             .padding(.top, 32)
                             
                             LazyVStack(spacing: 12) {
-                                ForEach(transactions) { transaction in
+                                ForEach(viewModel.transactions) { transaction in
                                     ExchangeTransactionRow(
                                         type: transaction.type,
                                         title: transaction.title,

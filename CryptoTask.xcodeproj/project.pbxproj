@@ -7,13 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5C6DB9A02E45E97800985F58 /* Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C6DB99F2E45E97800985F58 /* Transaction.swift */; };
 		5C6DB9B12E46322900985F58 /* NavKit in Frameworks */ = {isa = PBXBuildFile; productRef = 5C6DB9B02E46322900985F58 /* NavKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		5C6DB9832E438A7800985F58 /* CryptoTask.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CryptoTask.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		5C6DB99F2E45E97800985F58 /* Transaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transaction.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -39,7 +37,6 @@
 		5C6DB97A2E438A7800985F58 = {
 			isa = PBXGroup;
 			children = (
-				5C6DB99F2E45E97800985F58 /* Transaction.swift */,
 				5C6DB9852E438A7800985F58 /* CryptoTask */,
 				5C6DB9842E438A7800985F58 /* Products */,
 			);
@@ -131,7 +128,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5C6DB9A02E45E97800985F58 /* Transaction.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

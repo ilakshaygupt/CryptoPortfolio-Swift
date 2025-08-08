@@ -9,17 +9,10 @@ import NavKit
 
 struct ExchangeSheetView: View {
     @Environment(\.dismiss) private var dismiss
-    @State private var fromCurrency = "ETH"
-    @State private var toCurrency = "INR"
-    @State private var fromAmount: String = ""
-    @State private var toAmount: String = "0.00"
+    @StateObject private var viewModel = ExchangeSheetViewModel()
     @FocusState private var isTextFieldFocused: Bool
     
     var onExchangeTransactionComplete: (ExchangeTransaction) -> Void
-    
-    private let conversionRate: Double = 157342.05
-    private let spread: Double = 0.002
-    private let gasFee: Double = 120.0
     
     var body: some View {
         NavigationView {
@@ -43,8 +36,7 @@ struct ExchangeSheetView: View {
                             Spacer()
                             
                             Button("Reset") {
-                                fromAmount = ""
-                                toAmount = "0.00"
+                                viewModel.resetForm()
                             }
                             .foregroundColor(.blue)
                         }
@@ -53,13 +45,13 @@ struct ExchangeSheetView: View {
                         
                         VStack(spacing: 16) {
                             CurrencyInputView(
-                                currency: $fromCurrency,
-                                amount: $fromAmount,
+                                currency: $viewModel.fromCurrency,
+                                amount: $viewModel.fromAmount,
                                 title: "From",
                                 isFocused: $isTextFieldFocused
                             )
                             
-                            Button(action: swapCurrencies) {
+                            Button(action: viewModel.swapCurrencies) {
                                 Image(systemName: "arrow.up.arrow.down")
                                     .foregroundColor(.white)
                                     .font(.system(size: 18, weight: .medium))
@@ -75,8 +67,8 @@ struct ExchangeSheetView: View {
                             }
                             
                             CurrencyInputView(
-                                currency: $toCurrency,
-                                amount: $toAmount,
+                                currency: $viewModel.toCurrency,
+                                amount: $viewModel.toAmount,
                                 title: "To",
                                 editable: false
                             )
@@ -94,17 +86,17 @@ struct ExchangeSheetView: View {
                             VStack(spacing: 12) {
                                 SummaryRow(
                                     title: "Rate",
-                                    value: "1 \(fromCurrency) = ₹\(String(format: "%.2f", conversionRate))"
+                                    value: viewModel.getRateText()
                                 )
                                 
                                 SummaryRow(
-                                    title: "Spread (\(String(format: "%.1f", spread * 100))%)",
-                                    value: "₹\(String(format: "%.2f", (Double(fromAmount) ?? 0) * conversionRate * spread))"
+                                    title: viewModel.getSpreadText(),
+                                    value: viewModel.getSpreadValue()
                                 )
                                 
                                 SummaryRow(
                                     title: "Network Fee",
-                                    value: "₹\(String(format: "%.0f", gasFee))"
+                                    value: viewModel.getNetworkFeeText()
                                 )
                                 
                                 Divider()
@@ -113,7 +105,7 @@ struct ExchangeSheetView: View {
                                 
                                 SummaryRow(
                                     title: "You'll Receive",
-                                    value: "₹\(toAmount)",
+                                    value: "₹\(viewModel.toAmount)",
                                     bold: true,
                                     valueColor: .green
                                 )
@@ -124,9 +116,12 @@ struct ExchangeSheetView: View {
                             .padding(.horizontal, 20)
                         }
                         
-                        Button(action: performExchange) {
+                        Button(action: {
+                            viewModel.onExchangeTransactionComplete = onExchangeTransactionComplete
+                            viewModel.performExchange()
+                        }) {
                             HStack {
-                                Text("Exchange \(fromAmount.isEmpty ? "0" : fromAmount) \(fromCurrency)")
+                                Text(viewModel.getExchangeButtonText())
                                     .font(.system(size: 16, weight: .semibold))
                                     .foregroundColor(.white)
                                 
@@ -147,8 +142,8 @@ struct ExchangeSheetView: View {
                                 )
                             )
                             .cornerRadius(16)
-                            .disabled(fromAmount.isEmpty || Double(fromAmount) == 0)
-                            .opacity(fromAmount.isEmpty || Double(fromAmount) == 0 ? 0.5 : 1.0)
+                            .disabled(viewModel.isExchangeButtonDisabled())
+                            .opacity(viewModel.getExchangeButtonOpacity())
                         }
                         .padding(.horizontal, 20)
                         .padding(.bottom, 40)
@@ -158,52 +153,13 @@ struct ExchangeSheetView: View {
             }
         }
         .navigationBarHidden(true)
-        .onChange(of: fromAmount) { _ in
-            calculateConversion()
+        .onChange(of: viewModel.fromAmount) { _ in
+            viewModel.calculateConversion()
         }
         .onTapGesture {
-            isTextFieldFocused = false
+            viewModel.isTextFieldFocused = false
         }
     }
     
-    func swapCurrencies() {
-        let temp = fromCurrency
-        fromCurrency = toCurrency
-        toCurrency = temp
-        calculateConversion()
-    }
-    
-    func calculateConversion() {
-        if let amount = Double(fromAmount), amount > 0 {
-            let converted = amount * conversionRate * (1 - spread) - gasFee
-            toAmount = String(format: "%.2f", max(0, converted))
-        } else {
-            toAmount = "0.00"
-        }
-    }
-    
-    func performExchange() {
-        guard let amount = Double(fromAmount), amount > 0 else { return }
-        
-        let formatter = DateFormatter()
-        formatter.dateFormat = "d MMMM"
-        let currentDate = formatter.string(from: Date())
-        
-        let transactionType: ExchangeTransaction.ExchangeTransactionType = toCurrency == "INR" ? .send : .receive
-        let transactionTitle = toCurrency == "INR" ? "Sold" : "Bought"
-        let transactionAmount = transactionType == .receive ? "+\(fromAmount)" : "-\(fromAmount)"
-        
-        let newExchangeTransaction = ExchangeTransaction(
-            type: transactionType,
-            title: transactionTitle,
-            date: currentDate,
-            currency: fromCurrency,
-            amount: transactionAmount
-        )
-        
-        onExchangeTransactionComplete(newExchangeTransaction)
-        
-        print("Exchange executed: \(fromAmount) \(fromCurrency) to \(toAmount) \(toCurrency)")
-        NavigationService.shared.pop()
-    }
+
 }

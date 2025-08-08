@@ -6,11 +6,8 @@
 //
 import SwiftUI
 
-import SwiftUI
-
 struct MainView: View {
-    @State private var selectedTab = "Analytics"
-    @State private var selectedRange = "6m"
+    @StateObject private var viewModel = MainViewModel()
     @Namespace private var animation
 
     var body: some View {
@@ -19,12 +16,12 @@ struct MainView: View {
             Color.black.ignoresSafeArea()
             
             VStack(spacing: 0) {
-                if selectedTab == "Analytics" {
+                if viewModel.selectedTab == "Analytics" {
                     ScrollView(.vertical, showsIndicators: true) {
                         VStack(spacing: 20) {
                             PortfolioHeaderCard()
-                            TimeRangeSelector(selectedRange: $selectedRange)
-                            ChartView(selectedRange: $selectedRange)
+                            TimeRangeSelector(selectedRange: $viewModel.selectedRange)
+                            ChartView(selectedRange: $viewModel.selectedRange)
                             CryptoCardRow()
                             RecentTransactionsView()
                             Spacer()
@@ -33,17 +30,17 @@ struct MainView: View {
                         .padding(.bottom, 120)
                     }
                 }
-                else if selectedTab == "Exchange" {
+                else if viewModel.selectedTab == "Exchange" {
                         ExchangeScreen()
                             .padding(.bottom, 120)
                     
                     
                 }
-                else if selectedTab == "Record" {
+                else if viewModel.selectedTab == "Record" {
                     Text("Record Screen")
                         .foregroundColor(.white)
                 }
-                else if selectedTab == "Wallet" {
+                else if viewModel.selectedTab == "Wallet" {
                     Text("Wallet Screen")
                         .foregroundColor(.white)
                 }
@@ -53,7 +50,7 @@ struct MainView: View {
             
             VStack {
                 Spacer()
-                BottomNavBar(selectedTab: $selectedTab, animation: animation)
+                BottomNavBar(selectedTab: $viewModel.selectedTab, animation: animation)
             }
         }
     }

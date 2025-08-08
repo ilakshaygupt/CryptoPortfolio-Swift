@@ -19,14 +19,7 @@ struct Transaction: Identifiable {
 }
 
 struct RecentTransactionsView: View {
-    
-    let transactions: [Transaction] = [
-        Transaction(icon: "bitcoinsign.circle.fill", iconColor: .orange, title: "Receive", date: "20 March", amount: "+0.002126", currency: "BTC"),
-        Transaction(icon: "arrow.left.arrow.right", iconColor: .gray, title: "Send", date: "21 March", amount: "-0.001000", currency: "BTC"),
-        Transaction(icon: "arrow.left.arrow.right", iconColor: .gray.opacity(0.5), title: "Exchange", date: "22 March", amount: "+0.002126", currency: "BTC"),
-        Transaction(icon: "bitcoinsign.circle.fill", iconColor: .orange, title: "Receive", date: "23 March", amount: "+0.005000", currency: "BTC"),
-        Transaction(icon: "arrow.left.arrow.right", iconColor: .gray, title: "Send", date: "24 March", amount: "-0.003000", currency: "BTC")
-    ]
+    @StateObject private var viewModel = TransactionViewModel()
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -37,7 +30,7 @@ struct RecentTransactionsView: View {
             
             ScrollView(.vertical, showsIndicators: false) {
                 LazyVStack(spacing: 12) {
-                    ForEach(transactions) { transaction in
+                    ForEach(viewModel.getRecentTransactions()) { transaction in
                         HStack(spacing: 12) {
                             ZStack {
                                 Circle()
@@ -63,8 +56,8 @@ struct RecentTransactionsView: View {
                                 Text(transaction.currency)
                                     .foregroundColor(.white)
                                     .font(.system(size: 14))
-                                Text(transaction.amount)
-                                    .foregroundColor(transaction.amount.contains("-") ? .red : .green)
+                                Text(viewModel.getTransactionAmount(for: transaction))
+                                    .foregroundColor(viewModel.getTransactionColor(for: transaction))
                                     .font(.system(size: 14, weight: .semibold))
                             }
                         }
